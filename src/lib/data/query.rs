@@ -1,6 +1,7 @@
 //! Database queries.
 
 use super::model;
+use crate::data::graph::GraphJob;
 use crate::data::{DataError, DatabasePool};
 use crate::web::api::ApiKey;
 use crate::ShortCode;
@@ -65,6 +66,16 @@ pub async fn new_job<M: Into<model::NewJob>>(model: M, pool: &DatabasePool) -> R
     .execute(pool)
     .await?;
     get_job(model.shortcode, pool).await
+}
+
+/// Fetches latest GraphJobs.
+pub async fn get_last_fetched_escrow_id_time(pool: &DatabasePool) -> Result<Option<i64>> {
+    let row = sqlx::query!(
+        "SELECT posted FROM jobs ORDER BY posted DESC LIMIT 1"
+    )
+        .fetch_optional(pool)
+        .await?;
+    Ok(row.map(|r| r.posted))
 }
 
 /// Updates a [`Job`](`crate::domain::Job`).

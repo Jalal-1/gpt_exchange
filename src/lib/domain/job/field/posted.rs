@@ -1,8 +1,6 @@
-use crate::JobError;
 use derive_more::Constructor;
 use rocket::form::{self, FromFormField, ValueField};
 use serde::{Deserialize, Serialize};
-use std::str::FromStr;
 
 /// The date posted field for a [`Job`](crate::domain::job::Job).
 #[derive(Clone, Constructor, Debug, Deserialize, Serialize)]

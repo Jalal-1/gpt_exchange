@@ -38,6 +38,22 @@ impl TryFrom<Job> for crate::domain::Job {
     }
 }
 
+impl From<crate::data::graph::GraphJob> for NewJob {
+    fn from(req: crate::data::graph::GraphJob) -> Self {
+        Self {
+            job_id: DbId::new().into(),
+            escrow_id: req.id,
+            manifest_id: None,
+            expires: None,
+            password: None,
+            shortcode: ShortCode::default().into(),
+            // parse as u64
+            posted: req.timestamp.parse::<i64>().unwrap(),
+
+        }
+    }
+}
+
 /// Data required to run the [`get_job`](crate::data::query::get_job()) query to get a [`Job`] from the database.
 pub struct GetJob {
     pub(in crate::data) shortcode: String,
