@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NewJob {
     pub escrow_id: field::EscrowId,
-    pub manifest_id: field::ManifestId,
+    pub manifest_url: field::ManifestUrl,
     pub posted: field::Posted,
     pub expires: field::Expires,
     pub password: field::Password,
@@ -19,10 +19,10 @@ pub struct NewJob {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UpdateJob {
     pub escrow_id: field::EscrowId,
-    pub manifest_id: field::ManifestId,
+    pub manifest_url: field::ManifestUrl,
     pub expires: field::Expires,
     pub password: field::Password,
-    pub shortcode: field::ShortCode,
+    pub shortcode: ShortCode,
 }
 
 /// Data required to run the [`get_job`](crate::service::action::get_job()) action to get a [`crate::domain::Job`].

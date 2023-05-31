@@ -1,7 +1,7 @@
 //! Actions that the service may perform.
 
-use crate::data::{query, DatabasePool, Transaction, };
-use crate::data::graph::{fetch_new_jobs_from_graph, get_escrows_from_graph, GraphJob};
+use crate::data::graph::{fetch_new_jobs_from_graph, get_escrows_from_graph};
+use crate::data::{query, DatabasePool, Transaction};
 use crate::service::ask;
 use crate::web::api::ApiKey;
 use crate::{Job, ServiceError, ShortCode};
@@ -70,8 +70,6 @@ pub async fn fetch_and_insert_new_jobs(
     }
     Ok(())
 }
-
-
 
 /// Creates a new [`ApiKey`].
 pub async fn generate_api_key(pool: &DatabasePool) -> Result<ApiKey, ServiceError> {

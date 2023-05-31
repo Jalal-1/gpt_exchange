@@ -1,5 +1,5 @@
 use gpt_exchange::domain::job::field::{
-    EscrowId, Expires, ManifestId, Password, Posted, ShortCode,
+    EscrowId, Expires, ManifestUrl, Password, Posted, ShortCode,
 };
 use gpt_exchange::service::ask::{GetJob, NewJob, UpdateJob};
 use gpt_exchange::web::api::{ApiKey, API_KEY_HEADER};
@@ -23,8 +23,8 @@ enum Command {
         password: Option<Password>,
         #[structopt(short, long, help = "expiration date")]
         expires: Option<Expires>,
-        #[structopt(short, long, help = "manifest_id")]
-        manifest_id: Option<ManifestId>,
+        #[structopt(short, long, help = "manifest_url")]
+        manifest_url: Option<ManifestUrl>,
     },
     Update {
         shortcode: ShortCode,
@@ -33,8 +33,8 @@ enum Command {
         password: Option<Password>,
         #[structopt(short, long, help = "expiration date")]
         expires: Option<Expires>,
-        #[structopt(short, long, help = "manifest_id")]
-        manifest_id: Option<ManifestId>,
+        #[structopt(short, long, help = "manifest_url")]
+        manifest_url: Option<ManifestUrl>,
     },
 }
 
@@ -98,12 +98,12 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
             posted,
             password,
             expires,
-            manifest_id,
+            manifest_url,
         } => {
             let req = NewJob {
                 escrow_id: EscrowId::new(job.as_str())?,
                 posted: Posted::new(posted),
-                manifest_id: manifest_id.unwrap_or_default(),
+                manifest_url: manifest_url.unwrap_or_default(),
                 expires: expires.unwrap_or_default(),
                 password: password.unwrap_or_default(),
             };
@@ -115,7 +115,7 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
             job,
             password,
             expires,
-            manifest_id,
+            manifest_url,
             shortcode,
         } => {
             let password = password.unwrap_or_default();
@@ -127,7 +127,7 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
             let svc_req = UpdateJob {
                 escrow_id: EscrowId::new(job.as_str())?,
                 expires: expires.unwrap_or(original_job.expires),
-                manifest_id: manifest_id.unwrap_or(original_job.manifest_id),
+                manifest_url: manifest_url.unwrap_or(original_job.manifest_url),
                 password,
                 shortcode,
             };

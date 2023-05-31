@@ -11,9 +11,9 @@ pub enum JobError {
     #[error("invalid password: {0}")]
     InvalidPassword(String),
 
-    /// Job manifest_id has unwanted words/data.
-    #[error("invalid manifest_id: {0}")]
-    InvalidManifestId(String),
+    /// Job manifest_url has unwanted words/data.
+    #[error("invalid manifest_url: {0}")]
+    InvalidManifestUrl(String),
 
     /// EscrowId was not provided.
     #[error("empty escrow_id")]
@@ -52,8 +52,8 @@ pub struct Job {
     pub shortcode: field::ShortCode,
     /// The escrow_id of the Job.
     pub escrow_id: field::EscrowId,
-    /// The manifest_id of the Job.
-    pub manifest_id: field::ManifestId,
+    /// The manifest_url of the Job.
+    pub manifest_url: field::ManifestUrl,
     /// The date that this Job was posted to the service.
     pub posted: field::Posted,
     /// The date that this Job will expire.

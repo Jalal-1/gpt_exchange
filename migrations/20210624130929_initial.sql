@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS jobs
     job_id   TEXT PRIMARY KEY NOT NULL,
     shortcode TEXT UNIQUE NOT NULL,
     escrow_id   TEXT NOT NULL,
-    manifest_id TEXT,
+    manifest_url TEXT,
     posted    BIGINT NOT NULL,
     expires   DATETIME,
     password  TEXT,

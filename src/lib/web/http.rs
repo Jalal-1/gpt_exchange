@@ -31,7 +31,7 @@ pub async fn new_job(
     if let Some(value) = form.value {
         let req = service::ask::NewJob {
             escrow_id: value.escrow_id,
-            manifest_id: value.manifest_id,
+            manifest_url: value.manifest_url,
             posted: value.posted,
             expires: value.expires,
             password: value.password,
@@ -242,7 +242,7 @@ pub mod test {
 
     #[test]
     fn requires_password_when_applicable() {
-        use crate::domain::job::field::{EscrowId, Expires, ManifestId, Password};
+        use crate::domain::job::field::{EscrowId, Expires, ManifestUrl, Password};
         use crate::service;
         use rocket::http::{Cookie, EscrowIdType};
 
@@ -254,7 +254,7 @@ pub mod test {
             escrow_id: EscrowId::new("escrow_id").unwrap(),
             expires: Expires::default(),
             password: Password::new("123".to_owned()).unwrap(),
-            title: ManifestId::default(),
+            title: ManifestUrl::default(),
         };
         let job = rt
             .block_on(async move { service::action::new_job(req, db.get_pool()).await })

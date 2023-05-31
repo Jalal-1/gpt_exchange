@@ -9,8 +9,8 @@ pub use shortcode::ShortCode;
 mod escrow_id;
 pub use escrow_id::EscrowId;
 
-mod manifest_id;
-pub use manifest_id::ManifestId;
+mod manifest_url;
+pub use manifest_url::ManifestUrl;
 
 mod posted;
 pub use posted::Posted;

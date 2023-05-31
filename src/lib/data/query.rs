@@ -1,7 +1,6 @@
 //! Database queries.
 
 use super::model;
-use crate::data::graph::GraphJob;
 use crate::data::{DataError, DatabasePool};
 use crate::web::api::ApiKey;
 use crate::ShortCode;
@@ -48,7 +47,7 @@ pub async fn new_job<M: Into<model::NewJob>>(model: M, pool: &DatabasePool) -> R
             job_id,
             shortcode,
             escrow_id,
-            manifest_id,
+            manifest_url,
             posted,
             expires,
             password,
@@ -57,7 +56,7 @@ pub async fn new_job<M: Into<model::NewJob>>(model: M, pool: &DatabasePool) -> R
         model.job_id,
         model.shortcode,
         model.escrow_id,
-        model.manifest_id,
+        model.manifest_url,
         model.posted,
         model.expires,
         model.password,
@@ -70,9 +69,7 @@ pub async fn new_job<M: Into<model::NewJob>>(model: M, pool: &DatabasePool) -> R
 
 /// Fetches latest GraphJobs.
 pub async fn get_last_fetched_escrow_id_time(pool: &DatabasePool) -> Result<Option<i64>> {
-    let row = sqlx::query!(
-        "SELECT posted FROM jobs ORDER BY posted DESC LIMIT 1"
-    )
+    let row = sqlx::query!("SELECT posted FROM jobs ORDER BY posted DESC LIMIT 1")
         .fetch_optional(pool)
         .await?;
     Ok(row.map(|r| r.posted))
@@ -89,12 +86,12 @@ pub async fn update_job<M: Into<model::UpdateJob>>(
             escrow_id = ?,
             expires = ?,
             password = ?,
-            manifest_id = ?
+            manifest_url = ?
            WHERE shortcode = ?"#,
         model.escrow_id,
         model.expires,
         model.password,
-        model.manifest_id,
+        model.manifest_url,
         model.shortcode
     )
     .execute(pool)
@@ -176,7 +173,7 @@ pub mod test {
         model::NewJob {
             job_id: DbId::new().into(),
             escrow_id: format!("escrow_id for job '{}'", shortcode),
-            manifest_id: None,
+            manifest_url: None,
             shortcode: shortcode.into(),
             posted: Utc::now().timestamp(),
             expires: None,

@@ -12,7 +12,7 @@ pub struct Job {
     pub(in crate::data) job_id: String,
     pub(in crate::data) shortcode: String,
     pub(in crate::data) escrow_id: String,
-    pub(in crate::data) manifest_id: Option<String>,
+    pub(in crate::data) manifest_url: Option<String>,
     pub(in crate::data) posted: i64,
     pub(in crate::data) expires: Option<NaiveDateTime>,
     pub(in crate::data) password: Option<String>,
@@ -29,7 +29,7 @@ impl TryFrom<Job> for crate::domain::Job {
             job_id: field::JobId::new(DbId::from_str(job.job_id.as_str())?),
             shortcode: field::ShortCode::from(job.shortcode),
             escrow_id: field::EscrowId::new(job.escrow_id.as_str())?,
-            manifest_id: field::ManifestId::new(job.manifest_id),
+            manifest_url: field::ManifestUrl::new(job.manifest_url),
             posted: field::Posted::new(u64::try_from(job.posted)?),
             expires: field::Expires::new(job.expires.map(Time::from_naive_utc)),
             password: field::Password::new(job.password.unwrap_or_default())?,
@@ -43,13 +43,12 @@ impl From<crate::data::graph::GraphJob> for NewJob {
         Self {
             job_id: DbId::new().into(),
             escrow_id: req.id,
-            manifest_id: None,
+            manifest_url: req.manifestUrl.into(),
             expires: None,
             password: None,
             shortcode: ShortCode::default().into(),
             // parse as u64
             posted: req.timestamp.parse::<i64>().unwrap(),
-
         }
     }
 }
@@ -86,7 +85,7 @@ pub struct NewJob {
     pub(in crate::data) job_id: String,
     pub(in crate::data) shortcode: String,
     pub(in crate::data) escrow_id: String,
-    pub(in crate::data) manifest_id: Option<String>,
+    pub(in crate::data) manifest_url: Option<String>,
     pub(in crate::data) posted: i64,
     pub(in crate::data) expires: Option<i64>,
     pub(in crate::data) password: Option<String>,
@@ -97,7 +96,7 @@ impl From<crate::service::ask::NewJob> for NewJob {
         Self {
             job_id: DbId::new().into(),
             escrow_id: req.escrow_id.into_inner(),
-            manifest_id: req.manifest_id.into_inner(),
+            manifest_url: req.manifest_url.into_inner(),
             expires: req.expires.into_inner().map(|time| time.timestamp()),
             password: req.password.into_inner(),
             shortcode: ShortCode::default().into(),
@@ -110,7 +109,7 @@ impl From<crate::service::ask::NewJob> for NewJob {
 pub struct UpdateJob {
     pub(in crate::data) shortcode: String,
     pub(in crate::data) escrow_id: String,
-    pub(in crate::data) manifest_id: Option<String>,
+    pub(in crate::data) manifest_url: Option<String>,
     pub(in crate::data) expires: Option<i64>,
     pub(in crate::data) password: Option<String>,
 }
@@ -119,7 +118,7 @@ impl From<crate::service::ask::UpdateJob> for UpdateJob {
     fn from(req: crate::service::ask::UpdateJob) -> Self {
         Self {
             escrow_id: req.escrow_id.into_inner(),
-            manifest_id: req.manifest_id.into_inner(),
+            manifest_url: req.manifest_url.into_inner(),
             expires: req.expires.into_inner().map(|time| time.timestamp()),
             password: req.password.into_inner(),
             shortcode: ShortCode::default().into(),

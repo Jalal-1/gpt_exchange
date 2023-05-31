@@ -4,28 +4,25 @@ use crate::data::DatabasePool;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
+#[allow(non_snake_case)]
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct GraphJob {
     pub id: String,
+    pub manifestUrl: Option<String>,
     pub timestamp: String,
 }
 
 /// Graph response object for [`launchedEscrows`] query.
+#[allow(non_snake_case)]
 #[derive(Debug, Deserialize)]
 struct Data {
     launchedEscrows: Vec<GraphJob>,
-}
-
-#[derive(Debug, Deserialize)]
-struct Error {
-    message: String,
 }
 
 // Graph query response
 #[derive(Debug, Deserialize)]
 struct QueryResponse {
     data: Option<Data>,
-    // errors: Option<Vec<Error>>,
 }
 
 pub async fn get_escrows_from_graph() -> Result<Vec<GraphJob>, Box<dyn std::error::Error>> {
@@ -33,6 +30,7 @@ pub async fn get_escrows_from_graph() -> Result<Vec<GraphJob>, Box<dyn std::erro
         {
             launchedEscrows(first: 500, orderBy: timestamp, orderDirection: desc) {
                 id
+                manifestUrl
                 timestamp
            }
         }
@@ -72,6 +70,7 @@ pub async fn fetch_new_jobs_from_graph(
                 {}
             ) {{
                 id,
+                manifestUrl,
                 timestamp
             }}
         }}

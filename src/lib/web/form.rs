@@ -8,7 +8,7 @@ use serde::Serialize;
 #[derive(Debug, Serialize, FromForm)]
 pub struct NewJob {
     pub escrow_id: field::EscrowId,
-    pub manifest_id: field::ManifestId,
+    pub manifest_url: field::ManifestUrl,
     pub posted: field::Posted,
     pub expires: field::Expires,
     pub password: field::Password,
